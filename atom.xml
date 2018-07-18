@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-07-18T02:51:53.663Z</updated>
+  <updated>2018-07-18T07:37:00.751Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://yoursite.com/2018/07/18/new-test/"/>
+    <id>http://yoursite.com/2018/07/18/new-test/</id>
+    <published>2018-07-18T07:36:28.757Z</published>
+    <updated>2018-07-18T07:37:00.751Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="新建一个文件试试"><a href="#新建一个文件试试" class="headerlink" title="新建一个文件试试"></a>新建一个文件试试</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> b =<span class="string">"444"</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;新建一个文件试试&quot;&gt;&lt;a href=&quot;#新建一个文件试试&quot; class=&quot;headerlink&quot; title=&quot;新建一个文件试试&quot;&gt;&lt;/a&gt;新建一个文件试试&lt;/h1&gt;&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
