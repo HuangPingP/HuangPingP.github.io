@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Vue组件间通信 | HuangPing&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3f51b5">
+    
+    
+    <meta name="keywords" content="vue">
+    <meta name="description" content="Vue组件间通信首先衷心的感谢展大神的指导我们在进行基于Vue的项目开发时，组件间的数据通信，是我们必须考虑的。  注： 本文所实现的方式，是在不考虑vuex下所做的实现。  我把组件间的关系，大致分为三种：  父子组件  123&amp;lt;parent&amp;gt;    &amp;lt;child&amp;gt;&amp;lt;/child&amp;gt;&amp;lt;/parent&amp;gt;  拥有类似结构，parent组件包含child组">
+<meta name="keywords" content="vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue组件间通信">
+<meta property="og:url" content="http://yoursite.com/2018/07/20/vue-tem-mess/index.html">
+<meta property="og:site_name" content="HuangPing&#39;s blog">
+<meta property="og:description" content="Vue组件间通信首先衷心的感谢展大神的指导我们在进行基于Vue的项目开发时，组件间的数据通信，是我们必须考虑的。  注： 本文所实现的方式，是在不考虑vuex下所做的实现。  我把组件间的关系，大致分为三种：  父子组件  123&amp;lt;parent&amp;gt;    &amp;lt;child&amp;gt;&amp;lt;/child&amp;gt;&amp;lt;/parent&amp;gt;  拥有类似结构，parent组件包含child组">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-20T09:35:11.085Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue组件间通信">
+<meta name="twitter:description" content="Vue组件间通信首先衷心的感谢展大神的指导我们在进行基于Vue的项目开发时，组件间的数据通信，是我们必须考虑的。  注： 本文所实现的方式，是在不考虑vuex下所做的实现。  我把组件间的关系，大致分为三种：  父子组件  123&amp;lt;parent&amp;gt;    &amp;lt;child&amp;gt;&amp;lt;/child&amp;gt;&amp;lt;/parent&amp;gt;  拥有类似结构，parent组件包含child组">
+    
+        <link rel="alternate" type="application/atom+xml" title="HuangPing&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Bobo Wang</h5>
+          <a href="mailto:1161505130@qq.com" title="1161505130@qq.com" class="mail">1161505130@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/HuangPingP" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Vue组件间通信</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Vue组件间通信</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-07-20T09:34:37.603Z" itemprop="datePublished" class="page-time">
+  2018-07-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Vue组件间通信"><span class="post-toc-number">1.</span> <span class="post-toc-text">Vue组件间通信</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#父子组件通信"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">父子组件通信</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-vue-tem-mess"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Vue组件间通信</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-07-20 17:34:37" datetime="2018-07-20T09:34:37.603Z"  itemprop="datePublished">2018-07-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="Vue组件间通信"><a href="#Vue组件间通信" class="headerlink" title="Vue组件间通信"></a>Vue组件间通信</h1><p>首先衷心的感谢展大神的指导<br>我们在进行基于<a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue</a>的项目开发时，组件间的数据通信，是我们必须考虑的。</p>
+<blockquote>
+<p>注： 本文所实现的方式，是在不考虑<code>vuex</code>下所做的实现。</p>
+</blockquote>
+<p>我把组件间的关系，大致分为三种：</p>
+<ol>
+<li><p>父子组件</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 拥有类似结构，<code>parent</code>组件包含<code>child</code>组件，则<code>child</code>组件是<code>parent</code>的子组件，<code>parent</code>组件是<code>child</code>组件的父组件。</p>
+</li>
+<li><p>兄弟组件</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">item</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">item</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 两个<code>item</code>组件在结构上同级，我们称之互为兄弟组件。</p>
+</li>
+<li><p>跨多级组件</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span><span class="tag">&lt;<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dialog</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">content</span>&gt;</span><span class="tag">&lt;/<span class="name">content</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dialog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 在这个结构中，<code>&lt;list&gt;</code>和<code>&lt;message&gt;</code>并不是直接的父子组件，中间还跨了一个级，在实际场景中，还会有跨更多层级的组件关系。<code>&lt;message&gt;</code> 和 <code>&lt;content&gt;</code> 组件两个既不是兄弟组件，又不是父子组件，而是跨了兄弟，父子的多级关系，实际场景中也会有发生交互。</p>
+</li>
+</ol>
+<p>那么这三种关系的组件，我们应该如何进行组件通信？</p>
+<h3 id="父子组件通信"><a href="#父子组件通信" class="headerlink" title="父子组件通信"></a>父子组件通信</h3><p>要讲父子组件的通信，首先，我们需要了解 <code>vue</code> 组件的 特性。</p>
+<ol>
+<li><p>单向数据流，数据自上而下。</p>
+<blockquote>
+<p>Prop 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是反过来不会。这是为<br>了防止子组件无意间修改了父组件的状态，来避免应用的数据流变得难以理解。</p>
+</blockquote>
+</li>
+<li><p>事件自下而上。</p>
+<p> 组件内部状态的变化，通过事件往上冒泡，通知上一级组件，由上一级组件监听事件，并触发相应回调。</p>
+</li>
+</ol>
+<p>基于以上，父子组件通信推荐的方式是：</p>
+<p>父组件通过<code>props</code>将状态传到子组件，子组件通过事件将状态冒泡到父组件，由父组件监听触发回调改变状态。</p>
+<p><code>parent.vue</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"parent"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">child</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:name</span>=<span class="string">"name"</span></span></span><br><span class="line"><span class="tag">            @<span class="attr">name-change</span>=<span class="string">"nameChange"</span></span></span><br><span class="line"><span class="tag">        &gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> Child <span class="keyword">from</span> <span class="string">'./child'</span>;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">    name: <span class="string">'parent'</span>,</span></span><br><span class="line"><span class="undefined">    data () &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="javascript">            name: <span class="string">'Jack'</span></span></span><br><span class="line"><span class="undefined">        &#125;;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    methods: &#123;</span></span><br><span class="line"><span class="undefined">        nameChange(name) &#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">this</span>.name = name;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    components: &#123;</span></span><br><span class="line"><span class="undefined">        Child</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>child.vue</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"child"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123;name&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">"onClick"</span>&gt;</span>change name<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">    name: <span class="string">'child'</span>,</span></span><br><span class="line"><span class="undefined">    props: &#123;</span></span><br><span class="line"><span class="undefined">        name: &#123;</span></span><br><span class="line"><span class="javascript">            type: <span class="built_in">String</span>,</span></span><br><span class="line"><span class="undefined">            defualt() &#123;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">return</span> <span class="string">''</span>;</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    methods: &#123;</span></span><br><span class="line"><span class="undefined">        onClick() &#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">this</span>.$emit(<span class="string">'name-change'</span>, <span class="string">'John'</span>);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在某些例子或个人项目中，经常有发现到在子组件中使用 <code>this.$parent</code> 直接改变父组件的状态，诚然这种方式能够简化两个深耦合的组件的数据通信，在一些简单的场景中也会比较方便，但其实并不推荐采用这种方式实现父子组件通信，这样做的后果就是导致了数据流的不明确性，牺牲了单项数据流的简洁性，数据的变化流动变得不易于理解。</p>
+<p>在父组件中使用<code>this.$child</code> 直接调用子组件的方法，简单场景虽然适用，但是数据改变会不确定，复杂的场景下无法调用</p>
+<p>子组件<code>watch</code>监听 <code>props</code>数据变化（input输入）执行任务：为避免程序执行频率过高，设定定时器<br><code>parent.vue</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span>  <span class="attr">v-model.trim</span>=<span class="string">"message"</span> &gt;</span><span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">child</span> <span class="attr">:checkValue</span>=<span class="string">'message'</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>child.vue</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">props:[<span class="string">"message"</span>],</span><br><span class="line">watch: &#123;</span><br><span class="line">      message() &#123;</span><br><span class="line">        clearInterval(<span class="keyword">this</span>.timer);</span><br><span class="line">        <span class="keyword">let</span> vm = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">this</span>.timer = setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">          vm.getSearList()</span><br><span class="line">        &#125;,<span class="number">1000</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### 兄弟组件通信、跨多级组件通信</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">这两种组件关系，并没有直接的联系。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">如兄弟组件，我们会很自然的想到使用他们的父级组件作为中转，将 `</span>子组件<span class="number">1</span><span class="string">` 的状态通信到父组件，再由父组件通过 `</span>props<span class="string">` 流向 `</span>子组件<span class="number">2</span><span class="string">` ，反之亦然，但是如果兄弟组件间的交互复杂，但又与父组件没有存在直接的交互关联，父组件在这个过程当中，承担了多余的职责。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">又如跨多级组件，上述例子中，`</span>&lt;list&gt;<span class="string">`和`</span>&lt;message&gt;<span class="string">`之间间隔了多层，如果我们继续使用父子组件通信`</span>prop<span class="string">`和事件冒泡，中间的层需要重复的定义`</span>prop<span class="string">`和事件，这显然也导致了它们承担了多余的职责。 `</span>&lt;message&gt;<span class="string">` 和 `</span>&lt;content&gt;<span class="string">` 组件之间，更是在结构上没有关联，`</span>prop<span class="string">`和事件冒泡显得十分乏力，无法直接完成通信。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">那么这两种组件关系，该如何完成通信，又不对它们中间层级组件，或者父级组件造成多余的干扰？</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">由于两种组件关系没有直接的关联，所以我们需要有一个桥梁，能够直接连接它们，使它们变得有关联。即，我们需要一个`</span>中间件<span class="string">`。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">官方给我们的解决方案是`</span>vuex<span class="string">`，但我认为它更多是的作为全局状态的管理，使用它作为某两个组件的通信中间件，显得大材小用，所以我这里不做讨论。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">我所采取的方案是使用 自定义事件 完成组件通信。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">__实例化Vue__</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span>vue<span class="string">`已实现了一套事件系统，可以很方便的使用它来完成我们的组件通信。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span> javascript</span><br><span class="line"><span class="keyword">let</span> middleware = <span class="keyword">new</span> Vue();</span><br><span class="line"><span class="keyword">export</span> defualt middleware;</span><br></pre></td></tr></table></figure></p>
+<p><code>message.vue</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">'message'</span>,</span><br><span class="line">    data () &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            info: <span class="string">'hello'</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        sayHello() &#123;</span><br><span class="line">            middleware.$emit(<span class="string">'say-hello'</span>, <span class="keyword">this</span>.info);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><code>content.vue</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">'content'</span>,</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            info: <span class="string">''</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    created() &#123;</span><br><span class="line">        middleware.$on(<span class="string">'say-hello'</span>, info =&gt; &#123;</span><br><span class="line">            <span class="keyword">this</span>.info = info;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string">我们通过 `</span>middleware<span class="string">`， 在`</span>content.vue<span class="string">`注册了`</span>say-hello<span class="string">`事件，当`</span>message.vue<span class="string">`触发该事件时，`</span>content.vue<span class="string">`监听到事件触发回调，从而实现了状态传导。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">组件数据传导不再是通过`</span>props<span class="string">`传导，而是通过事件进行通信。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">__如果不使用实例化Vue的方式去完成，我们也可以自己实现一套自定义事件。__ 设计更加个性化的自定义事件，满足项目中的多样的使用场景。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span> javascript</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Event</span></span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="comment">// some props</span></span><br><span class="line">    &#125;</span><br><span class="line">    on() &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    emit() &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    off() &#123;</span><br><span class="line">        <span class="comment">// do somethig</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>复杂结构的组件通信，实现它们的通信，关键是实现中间件作为桥梁连接它们，无论是使用自定义事件，还是其他的方案。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-07-20T09:35:11.085Z" itemprop="dateUpdated">2018-07-20 17:35:11</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Bobo Wang">
+            Bobo Wang
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/07/20/vue-tem-mess/&title=《Vue组件间通信》 — HuangPing's blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/07/20/vue-tem-mess/&title=《Vue组件间通信》 — HuangPing's blog&source=今天想吃瓜" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/07/20/vue-tem-mess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Vue组件间通信》 — HuangPing's blog&url=http://yoursite.com/2018/07/20/vue-tem-mess/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/07/20/vue-tem-mess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/07/20/add-nav/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">创建标签和分类</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Bobo Wang &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/07/20/vue-tem-mess/&title=《Vue组件间通信》 — HuangPing's blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/07/20/vue-tem-mess/&title=《Vue组件间通信》 — HuangPing's blog&source=今天想吃瓜" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/07/20/vue-tem-mess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Vue组件间通信》 — HuangPing's blog&url=http://yoursite.com/2018/07/20/vue-tem-mess/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/07/20/vue-tem-mess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3aQXLCMAwFUO5/aXoAaPq/HJjGeV51gDp+WWhkSY9HvJ4v6/Xb337/+pvjfV4/P21hYGBclvE8XMe/SXZOdmif++bpGBgYN2Akh0jCYkJNSPnZMDAwMNrEbgZLnouBgYHRMo6Pu/4JBgYGxuwSm184ZwH0S3dxDAyMCzLyqvv3//5IfwMDA+NSjGe5vpMI1qfCwMDYmpEHuHbM4uRSWnIeDAyMTRn5AETeKphdiY9fyh8vCwMDY2vGrEx2brktSUCj4I6BgXEDxqxV0DYSZjW0JNHEwMC4D6O9gs7ajW2YjkIwBgbGpoz2Upp8mw9SRGE0KcBhYGDcgPG5UbC2nZDv/ybgYmBg3IbRNhpnAxazS+yve2JgYGzNmCVwK4X+tpxXnxADA2M7xsp2+ZjFuU3Qx7lvBQMD498z8vLW7JLZpnqz4I6BgbE3Y/bPK0MSbSkt2QcDA2NvxuygeaqXB+UkJS1mRjAwMLZjJIMXK0GznYtYajNgYGBsyjh3YCth56+jznMxMDBuw8hD3izhyy/JBQ8DA+MGjFmozUlJg6G9PNflNgwMjAsynuX6BK9tl0bvBgMDYyPGrDGZNx3bIbOVwh8GBsbejNkYa1vob5O/OuBiYGDcgDFraralurYJesJdHAMD45aMWY552nGPi24YGBgYQYGsDcRtO6FuYWJgYGzEaEdLlx4ZhNF6CAMDA2NrRpuondW2XGltLvU3MDAwrsT4AWdKLLo9BSCCAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
